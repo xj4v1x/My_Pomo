@@ -256,7 +256,7 @@
     
 }
 
-#start_button {
+#startbutton {
     width: 60%;
     min-width: 256px;
     border: 2px solid var(--bg-color-alt);
@@ -266,11 +266,11 @@
         background-color: var(--red-color);
         position: absolute;        
         width: 5%;
-        opacity: 0;        
+        opacity: 0;
     }
 }
 
-#pause_button {
+#pausebutton {
     display: none;
     color: var(--white-color);
     background-color: var(--red-color);
@@ -290,7 +290,7 @@
     }
 }
 
-#stop_button {
+#stopbutton {
     display: none;
     color: var(--white-color);
     background-color: var(--red-color);

@@ -8,7 +8,7 @@ const secs = document.getElementById("secs");
 let tiempoTotal = 0;
 const start_button = document.getElementById("startbutton");
 const pause_button = document.getElementById("pausebutton");
-const stop_button = document.getElementById("stop_button");
+const stop_button = document.getElementById("stopbutton");
 
 const worktime_button = document.getElementById("worktime_button");
 const shortbreak_button = document.getElementById("shortbreak_button");
@@ -18,8 +18,8 @@ const body = document.body;
 const root = document.documentElement;
 
 // Configuración del Tiempo para cada modo
-let workTime = true; let workTime_Mins = 25;
-let breakTime = false; let breakTime_Mins = 5;
+let workTime = true; let workTime_Mins = 1;
+let breakTime = false; let breakTime_Mins = 2;
 let restTime = false; let restTime_Mins = 15;
 
 const speed = 100; /* 1000 = 1 segundo */
@@ -32,6 +32,9 @@ pomodoroSecs = parseInt(secs.innerText);
 let running = false;
 let inpause = false;
 
+let totalPomodoros = 0;
+let totalBreakTime = 0;
+let totalRestTime = 0;
 
 // Selecciona el círculo
 const circle = document.querySelector(".progress-ring__circle");
@@ -125,19 +128,28 @@ function startPomodoro(){
                         pomodoroSecs = 59;
                         pomodoroMins -= 1;
                     }
-                    if (pomodoroSecs<0) {
+                    pomodoroSecs<10 ? secs.innerText = '0' + pomodoroSecs : secs.innerText = pomodoroSecs;
+                    pomodoroMins<10 ? mins.innerText = '0' + pomodoroMins : mins.innerText = pomodoroMins;
+                    setProgress(porcentaje);
+                    if (pomodoroSecs<0) {                        
+                        if (workTime) {
+                            totalPomodoros += 1;
+                            console.log("Pomodoros Totales: " + totalPomodoros);
+                            changeMode(1);
+                        } else if (breakTime) {
+                            totalBreakTime += 1;
+                            console.log("Break Time Totales: " + totalBreakTime);
+                            changeMode(0);
+                        }
                         loadPomodoro();
                         stopPomodoro();
                     }
-                } else {
+                } else {                    
                     loadPomodoro();
                     stopPomodoro();
-                }
-                pomodoroSecs<10 ? secs.innerText = '0' + pomodoroSecs : secs.innerText = pomodoroSecs;
-                pomodoroMins<10 ? mins.innerText = '0' + pomodoroMins : mins.innerText = pomodoroMins;
-                setProgress(porcentaje);
+                }                
             }, speed);
-        } else {
+        } else {            
             loadPomodoro();
             stopPomodoro();
         }
@@ -156,6 +168,7 @@ stop_button.addEventListener("click", function () {
 });
 
 function stopPomodoro(){
+    setProgress(100);
     running = false;
     inpause = false;
     start_button.classList.remove('active');    
@@ -179,7 +192,7 @@ pause_button.addEventListener("click", function () {
 });
 
 function pausePomodoro(){
-    if (running) {
+    if (running) {        
         running = false;
         inpause = true;        
         clearInterval(timer);
@@ -228,7 +241,7 @@ function changeColor(colorVar) {
     clock.style.color = 'var(' + colorVar + ')';
 }
 
-function changeMode(mode) {
+function changeMode(mode) {    
     stopPomodoro();
     mode == 0 ? workTime = true : workTime = false;
     mode == 1 ? breakTime = true : breakTime = false;
