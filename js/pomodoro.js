@@ -6,8 +6,8 @@
 const mins = document.getElementById("mins");
 const secs = document.getElementById("secs");
 let tiempoTotal = 0;
-const start_button = document.getElementById("start_button");
-const pause_button = document.getElementById("pause_button");
+const start_button = document.getElementById("startbutton");
+const pause_button = document.getElementById("pausebutton");
 const stop_button = document.getElementById("stop_button");
 
 const worktime_button = document.getElementById("worktime_button");
@@ -18,14 +18,16 @@ const body = document.body;
 const root = document.documentElement;
 
 // Configuración del Tiempo para cada modo
-let pomodoro = true; let pMins = 25;
-let shortBreak = false; let sbMins = 5;
-let longBreak = false; let lbMins = 15;
+let workTime = true; let workTime_Mins = 25;
+let breakTime = false; let breakTime_Mins = 5;
+let restTime = false; let restTime_Mins = 15;
 
 const speed = 100; /* 1000 = 1 segundo */
 // Minutos y Segundos del timer
 let pomodoroMins;
 let pomodoroSecs;
+pomodoroMins = parseInt(mins.innerText);
+pomodoroSecs = parseInt(secs.innerText);
 // Estado de los botones del timer
 let running = false;
 let inpause = false;
@@ -67,21 +69,18 @@ function setProgress(percentage) {
     circle.style.strokeDashoffset = offset;    
 }
 
-
-
-
 window.addEventListener("load", (event) => {
     timer = undefined;
     loadPomodoro();
 });
 
 function loadPomodoro(){
-    if (pomodoro == true) {
-        mins.innerText = pMins;
-    } else if (shortBreak == true) {
-        mins.innerText = sbMins;
+    if (workTime == true) {
+        mins.innerText = workTime_Mins;
+    } else if (breakTime == true) {
+        mins.innerText = breakTime_Mins;
     } else {
-        mins.innerText = lbMins;
+        mins.innerText = restTime_Mins;
     };
     secs.innerText = "00";
     pomodoroMins = parseInt(mins.innerText);
@@ -196,41 +195,61 @@ function pausePomodoro(){
     }    
 }
 
-/**************************** MODE BUTTONS ******************************/
-/**************************** MODE BUTTONS ******************************/
-/**************************** MODE BUTTONS ******************************/
-worktime_button.addEventListener("click", function () {
-    pomodoro = true; shortBreak = false; longBreak = false;
-    pomodoroMins = pMins; pomodoroSecs = 0;
-    worktime_button.classList.add('active');
-    shortbreak_button.classList.remove('active');
-    longbreak_button.classList.remove('active');
-    start_button.classList.remove('active');
-    pause_button.classList.remove('active');
-    stopPomodoro();
-    loadPomodoro();
+/* *************************************************** */
+/* ************** **  STATUS BAR  ** **************** */
+/* ************************************************* */
+
+const worktime_btn = document.getElementById("worktime_btn");
+const breaktime_btn = document.getElementById("breaktime_btn");
+const resttime_btn = document.getElementById("resttime_btn");
+const start_btn = document.getElementById("startbutton");
+const pause_btn = document.getElementById("pausebutton");
+const clock =  document.getElementById("clock");
+
+
+worktime_btn.addEventListener("click", function () {
+    changeMode(0);
 });
 
-shortbreak_button.addEventListener("click", function () {    
-    pomodoro = false; shortBreak = true; longBreak = false;
-    pomodoroMins = sbMins; pomodoroSecs = 0;
-    worktime_button.classList.remove('active');
-    shortbreak_button.classList.add('active');
-    longbreak_button.classList.remove('active');
-    start_button.classList.remove('active');
-    pause_button.classList.remove('active');
-    stopPomodoro();
-    loadPomodoro();
+breaktime_btn.addEventListener("click", function () {
+    changeMode(1);
 });
 
-longbreak_button.addEventListener("click", function () {    
-    pomodoro = false; shortBreak = false; longBreak = true;
-    pomodoroMins = lbMins; pomodoroSecs = 0;    
-    worktime_button.classList.remove('active');
-    shortbreak_button.classList.remove('active');
-    longbreak_button.classList.add('active');
-    start_button.classList.remove('active');
-    pause_button.classList.remove('active');
-    stopPomodoro();
-    loadPomodoro();
+resttime_btn.addEventListener("click", function () {   
+    changeMode(2);
 });
+
+function changeColor(colorVar) {    
+    circle.style.stroke = 'var(' + colorVar + ')';
+    outcircle.style.stroke = 'var(' + colorVar + ')';
+    incircle.style.stroke = 'var(' + colorVar + ')';
+    mins.style.color = 'var(' + colorVar + ')';    
+    secs.style.color = 'var(' + colorVar + ')';
+    clock.style.color = 'var(' + colorVar + ')';
+}
+
+function changeMode(mode) {
+    stopPomodoro();
+    mode == 0 ? workTime = true : workTime = false;
+    mode == 1 ? breakTime = true : breakTime = false;
+    mode == 2 ? restTime = true : restTime = false;
+    
+    workTime ? pomodoroMins = workTime_Mins :
+        breakTime ? pomodoroMins = breakTime_Mins :        
+            restTime ? pomodoroMins = restTime_Mins : console.log("ERROR");
+    
+    workTime ? changeColor("--blue-color") :
+        breakTime ? changeColor("--orange-color") :
+            restTime ? changeColor("--green-color") :
+                console.log("ERROR");
+
+    workTime ? worktime_btn.classList.add('work') : worktime_btn.classList.remove('work');
+    breakTime ? breaktime_btn.classList.add('brake') : breaktime_btn.classList.remove('brake');
+    restTime ? resttime_btn.classList.add('rest') : resttime_btn.classList.remove('rest');
+    
+    start_btn.classList.remove('active');
+    pause_btn.classList.remove('active');
+
+    mins.innerText = pomodoroMins;
+    secs.innerText = "00";
+}
