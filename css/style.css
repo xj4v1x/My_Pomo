@@ -307,7 +307,7 @@
 
 /* ANIMACION FONDO*/
 .grid-scroll {    
-    background: url("/img/png/bg_dark_pattern.png") repeat;
+    background: url("../img/png/bg_dark_pattern.png") repeat;
     background-color: rgb(32, 30, 34);
     animation: bg-scrolling-reverse 5s linear infinite;    
 }
