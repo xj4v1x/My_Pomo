@@ -159,13 +159,14 @@
 
 #clock {
     position: absolute;
+    color: var(--blue-color);
     & span {
         -webkit-user-select: none;
         user-select: none;
         font-family: var(--font-family-main);
         font-size: var(--font-size-xxxlarge);
         font-weight: bolder;
-        color: var(--blue-color);            
+        color: inherit;            
     }
 }
 
