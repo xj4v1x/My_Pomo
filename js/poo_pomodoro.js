@@ -1,49 +1,90 @@
-class clock {
-    constructor(minutes = 0, seconds = 0) {
+
+class Clock {
+    constructor(minutes = 0, seconds = 0, steps = 1000) {
+        this.initialMinutes = minutes;
+        this.initialSeconds = seconds;
+        this.steps = steps;
         this.minutes = minutes;
         this.seconds = seconds;
         this.interval = null;
     }
 
+//  start()   Inicia el reloj
     start() {
         if (this.interval) return;
         this.interval = setInterval(() => {
-            this.tick();
-        }, 1000);
+            this.run();
+            this.updateDisplay();
+        }, this.steps);
     }
 
-    stop() {
+//  pause()     Pausa el reloj
+    pause() {
         clearInterval(this.interval);
         this.interval = null;
-        console.log("⏹ Reloj detenido");
+        console.log("⏹ Reloj pausado");
     }
 
-    reset() {
-        this.stop();
-        this.minutes = 0;
-        this.seconds = 0;
+//  stop()      Detiene el reloj
+    stop() {
+        this.pause();
+        this.minutes = this.initialMinutes;
+        this.seconds = this.initialSeconds;
         console.log("🔄 Reloj reiniciado");
+        this.updateDisplay();
     }
 
-    tick() {
+//  run()       Empieza a contar el tiempo    
+    run() {
+        if (this.minutes === 0 && this.seconds === 0) {            
+            this.stop();
+            return;
+        }
         if (this.seconds === 0) {
             this.seconds = 59;
-            this.minutes--;
+            if (this.minutes > 0) {
+                this.minutes--;
+            }
         } else {
             this.seconds--;
         }
-
-        console.log(this.getTime()); // Muestra el tiempo actualizado
+        console.log(this.getTime());
     }
 
+//  Devuelve una cadena con el formato minutos:segundos    
     getTime() {
         return `${String(this.minutes).padStart(2, "0")}:${String(this.seconds).padStart(2, "0")}`;
     }
+
+// Actualiza el display (DOM)    
+    updateDisplay() {        
+        if (mins && secs) {
+            mins.innerText = String(this.minutes).padStart(2, "0");
+            secs.innerText = String(this.seconds).padStart(2, "0");
+        }
+    }
 }
 
-window.onload = (event) => {
-    console.log("page is fully loaded");
-    const myClock = new clock(25 , 5);
-myClock.start(); // Comienza a contar
-setTimeout(() => myClock.stop(), myClock.seconds*1000); // Se detiene después de 5 segundos
+
+window.onload = () => {
+    console.log("La página se ha cargado completamente");    
+    const pomodoroClock = new Clock(25,0,1000);
+    
+    const startButton = document.getElementById("startbutton");
+    //const stopButton = document.getElementById("stopbutton");
+    //const resetButton = document.getElementById("resetbutton");
+
+    mins = document.getElementById("mins");
+    secs = document.getElementById("secs");
+
+    // Botón de iniciar
+    startButton.addEventListener("click", () => {
+        startButton.classList.add("active");
+        pomodoroClock.start();
+    });
+    startButton.addEventListener("dblclick", () => {    
+        pomodoroClock.pause();
+    });
+    
+    pomodoroClock.updateDisplay(); // Muestra los valores iniciales en pantalla
 };
