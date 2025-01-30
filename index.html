@@ -40,7 +40,12 @@
                 </div>
             </div>
             <div id="pomodoro_core" class="grid-scroll">
-                <div id="tasks"></div>
+                <div id="tasks">
+                    <div class="actual">
+                        <label for="actual_task">Actual Task</label>
+                        <span name="actual_task" id="actual_task"></span>
+                    </div>
+                </div>
                 <div id="statistics"></div>
                 <div id="timer">
                     <div class="circle-container">
@@ -196,9 +201,9 @@
               <!-- ********* TASKS ********** --><!-- ********* TASKS ********** -->
               <!-- ********* TASKS ********** --><!-- ********* TASKS ********** -->
 <script src="js/app.js"></script>
-<script src="js/pomodoro.js"></script>
+<script type="module" src="js/pomodoro.js"></script>
 <script src="js/dragdrop.js"></script>
-<script src="js/tareas.js"></script>
+<script type="module" src="js/tareas.js"></script>
 
 
 

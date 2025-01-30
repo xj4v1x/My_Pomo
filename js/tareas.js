@@ -1,3 +1,5 @@
+import {loadActualTask} from "./pomodoro.js";
+
 document.addEventListener("DOMContentLoaded", () => {
 
 	// Selecciona el elemento <ul> con id tasks_list
@@ -17,51 +19,52 @@ addTaskInput.addEventListener("keypress", function(event) {
   // Cuando se pulsa Enter
 	if (event.key === "Enter") {
 		addTaskInput.blur();
-		event.preventDefault();		
-    	// Ejecuta la función saveTask		
-		saveTask();		
-	}	
+		event.preventDefault();
+    	// Ejecuta la función saveTask
+		saveTask();
+	}
 }); 
 
-  // Grabar nueva tarea
-	const saveTask = () => {
-		const newTaskText = addTaskInput.value.trim();
-		if (newTaskText) {
-			// Crea un nuevo elemento <li>
-			const newTask = document.createElement("li");
-			// Y le establece el atributo draggable = true
-			newTask.setAttribute("draggable", "true");
-			newTask.classList.add("taskinlist");
-			// Inserta el texto que teníamos en el input			
-			//newTask.textContent = newTaskText;
-			const taskContent = document.createElement("span");
-			taskContent.textContent = newTaskText;
+// Grabar nueva tarea
+const saveTask = () => {
+	const newTaskText = addTaskInput.value.trim();
+	if (newTaskText) {
+		// Crea un nuevo elemento <li>
+		const newTask = document.createElement("li");
+		// Y le establece el atributo draggable = true
+		newTask.setAttribute("draggable", "true");
+		newTask.classList.add("taskinlist");
+		// Inserta el texto que teníamos en el input			
+		//newTask.textContent = newTaskText;
+		const taskContent = document.createElement("span");
+		taskContent.textContent = newTaskText;
 
-			// Botones
-			const taskeditbuttons = createButton('<span class="material-symbols-outlined">menu</span>', "taskEdit_btn");
-			taskeditbuttons.style.zIndex="3";
-			const editButton = createButton('<span class="material-symbols-outlined">edit</span>', "editTask_btn");
-			const deleteButton = createButton('<span class="material-symbols-outlined">delete</span>', "deleteTask_btn");
-			const completeButton = createButton('<span class="material-symbols-outlined">check</span>', "completeTask_btn");
+		// Botones
+		const taskeditbuttons = createButton('<span class="material-symbols-outlined">menu</span>', "taskEdit_btn");
+		taskeditbuttons.style.zIndex="3";
+		const editButton = createButton('<span class="material-symbols-outlined">edit</span>', "editTask_btn");
+		const deleteButton = createButton('<span class="material-symbols-outlined">delete</span>', "deleteTask_btn");
+		const completeButton = createButton('<span class="material-symbols-outlined">check</span>', "completeTask_btn");
 
-			const taskButtons = document.createElement("div");
-			taskButtons.classList.add("taskseditcontainer");
-			taskButtons.append(editButton, deleteButton, completeButton);
-			// Añade este nuevo li delante del primer hijo (en primera posición)			
-			newTask.append(taskContent, taskeditbuttons, taskButtons);
-			tasksList.insertBefore(newTask, tasksList.children[1]);		
+		const taskButtons = document.createElement("div");
+		taskButtons.classList.add("taskseditcontainer");
+		taskButtons.append(editButton, deleteButton, completeButton);
+		// Añade este nuevo li delante del primer hijo (en primera posición)			
+		newTask.append(taskContent, taskeditbuttons, taskButtons);
+		tasksList.insertBefore(newTask, tasksList.children[1]);		
 
-			// Vacía el input
-			addTaskInput.value = "";
+		// Vacía el input
+		addTaskInput.value = "";
 
-			// Añade eventos a los botones
-			taskeditbuttons.addEventListener("click", (event) => opentasksedit(event.currentTarget));
-			editButton.addEventListener("click", () => editTask(newTask));
-			deleteButton.addEventListener("click", () => deleteTask(newTask));
-			completeButton.addEventListener("click", () => completeTask(newTask));
-			const event = new Event('taskAddedOrNot');
-			document.dispatchEvent(event);
-		}		
+		// Añade eventos a los botones
+		taskeditbuttons.addEventListener("click", (event) => opentasksedit(event.currentTarget));
+		editButton.addEventListener("click", () => editTask(newTask));
+		deleteButton.addEventListener("click", () => deleteTask(newTask));
+		completeButton.addEventListener("click", () => completeTask(newTask));
+		const event = new Event('taskAddedOrNot');
+		document.dispatchEvent(event);
+	}
+	loadActualTask();
 };
 
 
@@ -119,7 +122,7 @@ const finishEditingTask = (task, input) => {
 };
 
 const deleteTask = (task) => {
-	tasksList.removeChild(task);	
+	tasksList.removeChild(task);
 	const event = new Event('taskAddedOrNot');
 	document.dispatchEvent(event);
 };
@@ -135,14 +138,6 @@ const createButton = (html, className) => {
     button.classList.add(className);
     return button;
 };
-
-
-
-
-
-
-
-
 
 // Al arrastrar
 tasksList.addEventListener("dragstart", (e) => {
@@ -165,7 +160,8 @@ tasksList.addEventListener("dragend", (e) => {
 	// Restablece el z-index
     e.target.style.zIndex = "";	
 	// Vacía draggingItem
-    draggingItem = null;	
+    draggingItem = null;
+	loadActualTask();
 });
 
 // Al estar siendo arrastrado
@@ -178,7 +174,6 @@ tasksList.addEventListener("dragover", (e) => {
 		tasksList.appendChild(draggingItem);
     }
 });
-
 
 function getDragAfterElement(container, y) {
     const draggableElements = [

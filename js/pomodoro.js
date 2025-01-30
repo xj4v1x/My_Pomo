@@ -1,4 +1,3 @@
-
 /* *************************************************** */
 /* ************** *  POMODORO  ** ******************* */
 /* *************************************************** */
@@ -66,6 +65,20 @@ incircle.style.strokeDashoffset = inoffset;
 const outoffset = outcircumference - 1 * outcircumference;
 outcircle.style.strokeDashoffset = outoffset;
 
+/* TASKS  */
+const actual_task = document.getElementById("actual_task");
+//const tasksList = document.getElementById("tasks_list");
+const tasksList = document.getElementsByClassName("taskinlist");
+//const tareasworks = function 
+export function loadActualTask() {
+    //const liElements = tasksList.querySelectorAll("span");
+    
+    try {
+        actual_task.innerText = (tasksList[0].innerText.split("\n")[0]);
+        //liElements[1].innerText == undefined ? actual_task.innerText = "Nada" : actual_task.innerText = liElements[1].innerText;
+    } catch { };
+    
+}
 
 function setProgress(percentage) {
     const offset =  (percentage / 100) * circumference;
@@ -78,6 +91,7 @@ window.addEventListener("load", (event) => {
 });
 
 function loadPomodoro(){
+    loadActualTask();
     if (workTime == true) {
         mins.innerText = workTime_Mins;
     } else if (breakTime == true) {
@@ -135,6 +149,7 @@ function startPomodoro(){
                         if (workTime) {
                             totalPomodoros += 1;
                             console.log("Pomodoros Totales: " + totalPomodoros);
+                            pomodoroComplete();
                             changeMode(1);
                         } else if (breakTime) {
                             totalBreakTime += 1;
@@ -265,4 +280,8 @@ function changeMode(mode) {
 
     mins.innerText = pomodoroMins;
     secs.innerText = "00";
+}
+
+function pomodoroComplete() {
+
 }

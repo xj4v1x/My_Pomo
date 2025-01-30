@@ -349,7 +349,7 @@
         width: 90%;
     }
     .progress-ring {
-        transform: scale(.75) rotate(-90deg);        
+        transform: scale(.75) rotate(-90deg);
     }
     #clock span {
         font-size: var(--font-size-xxlarge);
@@ -358,6 +358,31 @@
         margin: auto;
         width: 100%;
     }
+}
+
+#tasks {
+    width: 100%;
+    position: relative;
+    & .actual {
+        position: absolute;
+        left: 0;
+        top: 0;
+        padding: .15rem 1rem;
+        border-radius: .5rem;
+        background-color: #3eb1f973;
+        width: fit-content;
+        display: block;
+        & label {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            font-size: var(--font-size-xxsmall);
+        }
+    }
+}
+
+#actual_task {
+    font-size: var(--font-size-xxsmall);
 }
 
 /* *** * *** * *** */
@@ -369,7 +394,7 @@
 }
 
 .comunidad {
-    width: 100%;    
+    width: 100%;
     background-color: var(--blue-color);
     padding: 4rem 0;
 }
