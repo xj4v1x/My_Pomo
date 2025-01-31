@@ -89,7 +89,7 @@
     align-self: center;
     justify-content: center;
     width: 100%;
-    gap: 1rem;    
+    gap: 1rem;
     & button {
         background-color: var(--bg-color-main);
         font-size: var(--font-size-xsmall);
@@ -105,7 +105,7 @@
         color: var(--white-color);        
         &:hover {
             box-shadow: 2px 2px 0px var(--white-color);
-        }       
+        }
     }    
     .active {
         box-shadow: 1px 1px 1px var(--bg-color-main);
@@ -230,10 +230,10 @@
     width: 60%;
     height: 100%;
     gap: 1rem;
-    & button {        
+    position: relative;
+    & button {
         border: 1px solid var(--bg-color-main);
-        padding: 0 .75rem;
-        cursor: pointer;
+        padding: 0 .75rem;        
         border-radius: 32px;
         padding: 0 32px;
         line-height: 1.5rem;
@@ -241,17 +241,12 @@
         font-family: var(--font-family-main);
         font-size: var(--font-size-xsmall);
         font-weight: bold;
-        color: var(--bg-color-main);
+        color: var(--bg-color-main);        
         &:hover {
-            color: var(--white-color);
-            /*box-shadow: 2px 2px 2px var(--bg-color-main);
-            transition: all .1s ease-in-out;*/
-            box-shadow: 5px 5px 0px 1px var(--bg-color-main),
-            5px 5px 1px 3px var(--white-color);                
-        }
-        &.active {
-            color: var(--white-color);
-        }
+            color: var(--white-color);            
+            box-shadow: 4px 4px 0px 1px var(--bg-color-main),
+            5px 5px 3px 1px var(--white-color);
+        }        
     }        
     
 }
@@ -262,31 +257,44 @@
     border: 2px solid var(--bg-color-alt);
     background-color: var(--yellow-color);
     transition: all .3s linear;
+    cursor: pointer;
     &.active {
-        background-color: var(--red-color);
-        position: absolute;        
-        width: 5%;
-        opacity: 0;
+        background-color: var(--orange-color);
+        position: absolute;
+        width: 25%;
+        opacity: 1;
+        top: 40%;
+        transform: translateY(2rem);
+        transition: all .3s linear;
+        cursor: not-allowed;
+        color: var(--white-color);
+            box-shadow: 2px 2px 0px 1px var(--bg-color-main),
+                3px 3px 3px 1px var(--white-color);
     }
 }
 
 #pausebutton {
-    display: none;
     color: var(--white-color);
     background-color: var(--red-color);
+    display: none;
     opacity: 0;
-    transition: all 1s ease-out;
-    &.ready, .active {
+    transition: all 2.5s ease-out;
+    &.ready {        
         display: block;
-        width: 8%;
+        cursor: pointer;
+        width: 8%;        
         min-width: 128px;
         background-color: var(--blue-color);
         opacity: 1;
         z-index: 2;
-        transition: all .3s ease-out;
+        transition: all .2s ease-out;
     }
     &.active {
         transform: translateX(2px) translateY(3px);
+        transition: all .2s ease-out;
+        color: var(--white-color);            
+            box-shadow: 2px 2px 0px 1px var(--bg-color-main),
+                3px 3px 3px 1px var(--white-color);
     }
 }
 
@@ -298,12 +306,18 @@
     transition: all .3s ease-out;
     &.ready {
         display: block;
+        cursor: pointer;
         width: 8%;
         min-width: 128px;
         background-color: var(--red-color);
         opacity: 1;
         z-index: 2;
-    }    
+    }
+    &.active{
+        color: var(--white-color);            
+            box-shadow: 2px 2px 0px 1px var(--bg-color-main),
+                3px 3px 3px 1px var(--white-color);
+    }
 } 
 
 /* ANIMACION FONDO*/

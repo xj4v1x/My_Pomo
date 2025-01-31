@@ -65,26 +65,4 @@ class Clock {
     }
 }
 
-
-window.onload = () => {
-    console.log("La página se ha cargado completamente");    
-    const pomodoroClock = new Clock(25,0,1000);
-    
-    const startButton = document.getElementById("startbutton");
-    //const stopButton = document.getElementById("stopbutton");
-    //const resetButton = document.getElementById("resetbutton");
-
-    mins = document.getElementById("mins");
-    secs = document.getElementById("secs");
-
-    // Botón de iniciar
-    startButton.addEventListener("click", () => {
-        startButton.classList.add("active");
-        pomodoroClock.start();
-    });
-    startButton.addEventListener("dblclick", () => {    
-        pomodoroClock.pause();
-    });
-    
-    pomodoroClock.updateDisplay(); // Muestra los valores iniciales en pantalla
-};
+export const pomodoroClock = new Clock(25,0,1000);        
