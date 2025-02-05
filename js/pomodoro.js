@@ -1,40 +1,35 @@
-/* *************************************************** */
-/* ************** *  POMODORO  ** ******************* */
-/* *************************************************** */
+import { start_button, pause_button, stop_button } from "./buttons.js";
+import { globals } from "./globals.js";
+import { loadActualTask } from "./tasks.js";
 
+const clock =  document.getElementById("clock");
+
+/* ************** *  POMODORO  ** ******************* */
+/* ************** DOM ******************* */
 const mins = document.getElementById("mins");
 const secs = document.getElementById("secs");
+
+/* ************** VARIABLES RELOJ ******************* */
 let tiempoTotal = 0;
-const start_button = document.getElementById("startbutton");
-const pause_button = document.getElementById("pausebutton");
-const stop_button = document.getElementById("stopbutton");
-
-const worktime_button = document.getElementById("worktime_button");
-const shortbreak_button = document.getElementById("shortbreak_button");
-const longbreak_button = document.getElementById("longbreak_button");
-
-const body = document.body;
-const root = document.documentElement;
-
 // Configuración del Tiempo para cada modo
-let workTime = true; let workTime_Mins = 1;
-let breakTime = false; let breakTime_Mins = 2;
-let restTime = false; let restTime_Mins = 15;
+let workTime = true; let workTime_Mins = globals.worktimeMinutes;
+let breakTime = false; let breakTime_Mins = globals.breaktimeMinutes;
+let restTime = false; let restTime_Mins = globals.resttimeMinutes;
 
 const speed = 100; /* 1000 = 1 segundo */
-// Minutos y Segundos del timer
-let pomodoroMins;
-let pomodoroSecs;
-pomodoroMins = parseInt(mins.innerText);
-pomodoroSecs = parseInt(secs.innerText);
-// Estado de los botones del timer
-let running = false;
-let inpause = false;
 
 let totalPomodoros = 0;
 let totalBreakTime = 0;
 let totalRestTime = 0;
 
+// Minutos y Segundos del timer
+let pomodoroMins;
+let pomodoroSecs;
+
+pomodoroMins = parseInt(mins.innerText);
+pomodoroSecs = parseInt(secs.innerText);
+
+/* ************** PROGRESO RELOJ ******************* */
 // Selecciona el círculo
 const circle = document.querySelector(".progress-ring__circle");
 const outcircle = document.querySelector(".out-ring__circle");
@@ -56,7 +51,6 @@ incircle.style.strokeDasharray = `${incircumference} ${incircumference}`;
 outcircle.style.strokeDasharray = `${outcircumference} ${outcircumference}`;
 circle.style.strokeDashoffset = circumference;
 
-
 incircle.style.strokeDashoffset = incircumference;
 outcircle.style.strokeDashoffset = outcircumference;
 
@@ -65,31 +59,14 @@ incircle.style.strokeDashoffset = inoffset;
 const outoffset = outcircumference - 1 * outcircumference;
 outcircle.style.strokeDashoffset = outoffset;
 
-/* TASKS  */
-const actual_task = document.getElementById("actual_task");
-//const tasksList = document.getElementById("tasks_list");
-const tasksList = document.getElementsByClassName("taskinlist");
-//const tareasworks = function 
-export function loadActualTask() {
-    //const liElements = tasksList.querySelectorAll("span");
-    
-    try {
-        actual_task.innerText = (tasksList[0].innerText.split("\n")[0]);
-        //liElements[1].innerText == undefined ? actual_task.innerText = "Nada" : actual_task.innerText = liElements[1].innerText;
-    } catch { };
-    
-}
-
-function setProgress(percentage) {
-    const offset =  (percentage / 100) * circumference;
-    circle.style.strokeDashoffset = offset;    
-}
 
 window.addEventListener("load", (event) => {
     timer = undefined;
     loadPomodoro();
 });
 
+
+/********************** loadPomodoro ******************************/
 function loadPomodoro(){
     loadActualTask();
     if (workTime == true) {
@@ -100,52 +77,34 @@ function loadPomodoro(){
         mins.innerText = restTime_Mins;
     };
     secs.innerText = "00";
-    pomodoroMins = parseInt(mins.innerText);
+    pomodoroMins = parseInt(mins.innerText);    
     pomodoroSecs = parseInt(secs.innerText);
     tiempoTotal = pomodoroMins*60 + pomodoroSecs;
-    if (!running) {
+    if (!globals.running) {
         start_button.classList.remove('active');
     }
 };
 
-
-/**************************** START BUTTON ******************************/
-/**************************** START BUTTON ******************************/
-/**************************** START BUTTON ******************************/
-
-start_button.addEventListener("dblclick", function () {
-    console.log("x2");
-});
-
-start_button.addEventListener("click", function () {    
-    running = !running;
-    if (running) {
-        start_button.classList.add("active");
-        pause_button.classList.remove('active');
-        pause_button.classList.add('ready');
-        stop_button.classList.add('ready');
-        startPomodoro();
-    } else {            
-        stopPomodoro();
-    }     
-    loadPomodoro(); 
-});
-
+/********************** startPomodoro ******************************/
 function startPomodoro(){
-    if (typeof timer === "undefined") {        
-        if (!inpause) {            
+    start_button.classList.add("active");
+    pause_button.classList.remove('active');
+    pause_button.classList.add('ready');
+    stop_button.classList.add('ready');
+    if (typeof timer === "undefined") {
+        if (!globals.inpause) {
             timer = setInterval(() => {
                 const porcentaje = (pomodoroMins*60+pomodoroSecs)*100/tiempoTotal;
                 if (pomodoroSecs>=0 || pomodoroMins>=0) {
-                    pomodoroSecs -= 1;                    
-                    if (pomodoroSecs < 0 && pomodoroMins>0) {             
+                    pomodoroSecs -= 1;
+                    if (pomodoroSecs < 0 && pomodoroMins>0) {
                         pomodoroSecs = 59;
                         pomodoroMins -= 1;
                     }
                     pomodoroSecs<10 ? secs.innerText = '0' + pomodoroSecs : secs.innerText = pomodoroSecs;
                     pomodoroMins<10 ? mins.innerText = '0' + pomodoroMins : mins.innerText = pomodoroMins;
                     setProgress(porcentaje);
-                    if (pomodoroSecs<0) {                        
+                    if (pomodoroSecs<0) {
                         if (workTime) {
                             totalPomodoros += 1;
                             console.log("Pomodoros Totales: " + totalPomodoros);
@@ -159,34 +118,26 @@ function startPomodoro(){
                         loadPomodoro();
                         stopPomodoro();
                     }
-                } else {                    
+                } else {
                     loadPomodoro();
                     stopPomodoro();
-                }                
+                }
             }, speed);
-        } else {            
+        } else {
             loadPomodoro();
             stopPomodoro();
         }
-    } else {        
+    } else {
         stopPomodoro();
     }
 };
 
-
-/**************************** STOP BUTTON ******************************/
-/**************************** STOP BUTTON ******************************/
-/**************************** STOP BUTTON ******************************/
-stop_button.addEventListener("click", function () {                    
-    stopPomodoro();    
-    loadPomodoro(); 
-});
-
+/********************** stopPomodoro ******************************/
 function stopPomodoro(){
     setProgress(100);
-    running = false;
-    inpause = false;
-    start_button.classList.remove('active');    
+    globals.running = false;
+    globals.inpause = false;
+    start_button.classList.remove('active');
     pause_button.classList.remove('active');
     pause_button.classList.remove('ready');
     stop_button.classList.remove('active');
@@ -198,55 +149,29 @@ function stopPomodoro(){
     }
 }
 
-/**************************** PAUSE BUTTON ******************************/
-/**************************** PAUSE BUTTON ******************************/
-/**************************** PAUSE BUTTON ******************************/
-pause_button.addEventListener("click", function () {
-    console.log("running");
-    pausePomodoro();
-});
-
+/********************** pausePomodoro ******************************/
 function pausePomodoro(){
-    if (running) {        
-        running = false;
-        inpause = true;        
+    if (globals.running) {
+        globals.running = false;
+        globals.inpause = true;
         clearInterval(timer);
-        //start_button.classList.toggle('active');
         pause_button.classList.toggle('active');
-    } else if (inpause) {
-            inpause = false;
-            running = true;        
+    } else if (globals.inpause) {
+            globals.inpause = false;
+            globals.running = true;
             timer = undefined;
-            //start_button.classList.toggle('active');
             pause_button.classList.toggle('active');
             startPomodoro();
-    }    
+    }
 }
 
-/* *************************************************** */
-/* ************** **  STATUS BAR  ** **************** */
-/* ************************************************* */
+/********************** setProgress ******************************/
+function setProgress(percentage) {
+    const offset =  (percentage / 100) * circumference;
+    circle.style.strokeDashoffset = offset;
+}
 
-const worktime_btn = document.getElementById("worktime_btn");
-const breaktime_btn = document.getElementById("breaktime_btn");
-const resttime_btn = document.getElementById("resttime_btn");
-const start_btn = document.getElementById("startbutton");
-const pause_btn = document.getElementById("pausebutton");
-const clock =  document.getElementById("clock");
-
-
-worktime_btn.addEventListener("click", function () {
-    changeMode(0);
-});
-
-breaktime_btn.addEventListener("click", function () {
-    changeMode(1);
-});
-
-resttime_btn.addEventListener("click", function () {   
-    changeMode(2);
-});
-
+/********************** changeColor ******************************/
 function changeColor(colorVar) {    
     circle.style.stroke = 'var(' + colorVar + ')';
     outcircle.style.stroke = 'var(' + colorVar + ')';
@@ -256,7 +181,8 @@ function changeColor(colorVar) {
     clock.style.color = 'var(' + colorVar + ')';
 }
 
-function changeMode(mode) {    
+/********************** changeMode ******************************/
+function changeMode(mode) {
     stopPomodoro();
     mode == 0 ? workTime = true : workTime = false;
     mode == 1 ? breakTime = true : breakTime = false;
@@ -275,13 +201,29 @@ function changeMode(mode) {
     breakTime ? breaktime_btn.classList.add('brake') : breaktime_btn.classList.remove('brake');
     restTime ? resttime_btn.classList.add('rest') : resttime_btn.classList.remove('rest');
     
-    start_btn.classList.remove('active');
-    pause_btn.classList.remove('active');
+    start_button.classList.remove('active');
+    pause_button.classList.remove('active');
 
     mins.innerText = pomodoroMins;
     secs.innerText = "00";
 }
 
+
+
+
+
+
+
+
+
+
+
 function pomodoroComplete() {
 
 }
+
+
+
+/**************************** EXPORTS ******************************/
+export {loadPomodoro, startPomodoro, stopPomodoro, pausePomodoro, setProgress};
+export {changeColor, changeMode, loadActualTask};

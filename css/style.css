@@ -748,7 +748,7 @@ body:has(#open-modal div #darkmode_button:checked) {
     flex-direction: column;
     justify-content: start;
     align-items: center;
-    overflow: hidden;
+    overflow: visible;
     & ul {
         margin-top: 2rem;
         list-style: none;
@@ -889,7 +889,7 @@ body:has(#open-modal div #darkmode_button:checked) {
         position: absolute;
         gap: .25rem;
         right: 2rem;
-        z-index: 5;
+        z-index: 5;        
         & button {
             border: 0;
             outline: 0;
