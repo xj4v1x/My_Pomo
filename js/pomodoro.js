@@ -1,6 +1,7 @@
 import { start_button, pause_button, stop_button } from "./buttons.js";
 import { globals } from "./globals.js";
 import { loadActualTask } from "./tasks.js";
+import { loadData, saveData, updateStats, addTask, completeTask, deleteTask } from "./data.js";
 
 const clock =  document.getElementById("clock");
 const sound = new Audio("../assets/sound/timer.mp3");
@@ -61,9 +62,8 @@ outcircle.style.strokeDashoffset = outoffset;
 window.addEventListener("load", (event) => {
     timer = undefined;
     loadPomodoro();
-    const pomodorosCompletados = localStorage.getItem("pomodorosCompletados") || 0;
-    console.log(`Pomodoros completados: ${pomodorosCompletados}`);
-    //localStorage.clear();  // Borra todo lo almacenado
+    loadData();
+    //localStorage.clear();
 });
 
 
@@ -108,7 +108,6 @@ function startPomodoro(){
                     if (pomodoroSecs<0) {
                         if (workTime) {
                             totalPomodoros += 1;
-                            localStorage.setItem("pomodorosCompletados", totalPomodoros);
                             console.log("Pomodoros Totales: " + totalPomodoros);
                             pomodoroComplete();
                             changeMode(1);
