@@ -4,9 +4,10 @@ export const globals = {
     inPause: false,
     currentTime: 0,    // El tiempo actual del reloj
     breakTime: false,   // Si es tiempo de descanso
-    worktimeMinutes: 25,
-    breaktimeMinutes: 5,
-    resttimeMinutes: 15,
+    worktimeMinutes: 2,
+    breaktimeMinutes: 1,
+    resttimeMinutes: 3,
     running : false,
-    inpause : false
+    inpause : false,
+    speed : 100
 };

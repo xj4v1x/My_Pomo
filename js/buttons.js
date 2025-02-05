@@ -1,4 +1,4 @@
-import { startPomodoro, stopPomodoro, pausePomodoro, loadPomodoro, changeMode } from "./pomodoro.js";
+import { startPomodoro, stopPomodoro, pausePomodoro, loadPomodoro, changeMode, stop_sound } from "./pomodoro.js";
 import { globals } from "./globals.js";
 
 const start_button = document.getElementById("startbutton");
@@ -19,17 +19,20 @@ start_button.addEventListener("click", function () {
         stopPomodoro();
     }
     loadPomodoro();
+    stop_sound();
 });
 
 /**************************** STOP BUTTON ******************************/
-stop_button.addEventListener("click", function () {                    
-    stopPomodoro();    
-    loadPomodoro(); 
+stop_button.addEventListener("click", function () {
+    stopPomodoro();
+    loadPomodoro();
+    stop_sound();
 });
 
 /**************************** PAUSE BUTTON ******************************/
 pause_button.addEventListener("click", function () {
     pausePomodoro();
+    stop_sound();
 });
 
 /********************** Work Time BUTTON ******************************/

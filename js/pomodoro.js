@@ -3,7 +3,7 @@ import { globals } from "./globals.js";
 import { loadActualTask } from "./tasks.js";
 
 const clock =  document.getElementById("clock");
-
+const sound = new Audio("../assets/sound/timer.mp3");
 /* ************** *  POMODORO  ** ******************* */
 /* ************** DOM ******************* */
 const mins = document.getElementById("mins");
@@ -15,8 +15,6 @@ let tiempoTotal = 0;
 let workTime = true; let workTime_Mins = globals.worktimeMinutes;
 let breakTime = false; let breakTime_Mins = globals.breaktimeMinutes;
 let restTime = false; let restTime_Mins = globals.resttimeMinutes;
-
-const speed = 100; /* 1000 = 1 segundo */
 
 let totalPomodoros = 0;
 let totalBreakTime = 0;
@@ -63,11 +61,14 @@ outcircle.style.strokeDashoffset = outoffset;
 window.addEventListener("load", (event) => {
     timer = undefined;
     loadPomodoro();
+    const pomodorosCompletados = localStorage.getItem("pomodorosCompletados") || 0;
+    console.log(`Pomodoros completados: ${pomodorosCompletados}`);
+    //localStorage.clear();  // Borra todo lo almacenado
 });
 
 
 /********************** loadPomodoro ******************************/
-function loadPomodoro(){
+function loadPomodoro(){    
     loadActualTask();
     if (workTime == true) {
         mins.innerText = workTime_Mins;
@@ -86,13 +87,13 @@ function loadPomodoro(){
 };
 
 /********************** startPomodoro ******************************/
-function startPomodoro(){
+function startPomodoro(){        
     start_button.classList.add("active");
     pause_button.classList.remove('active');
     pause_button.classList.add('ready');
     stop_button.classList.add('ready');
     if (typeof timer === "undefined") {
-        if (!globals.inpause) {
+        if (!globals.inpause) {                        
             timer = setInterval(() => {
                 const porcentaje = (pomodoroMins*60+pomodoroSecs)*100/tiempoTotal;
                 if (pomodoroSecs>=0 || pomodoroMins>=0) {
@@ -107,6 +108,7 @@ function startPomodoro(){
                     if (pomodoroSecs<0) {
                         if (workTime) {
                             totalPomodoros += 1;
+                            localStorage.setItem("pomodorosCompletados", totalPomodoros);
                             console.log("Pomodoros Totales: " + totalPomodoros);
                             pomodoroComplete();
                             changeMode(1);
@@ -116,13 +118,14 @@ function startPomodoro(){
                             changeMode(0);
                         }
                         loadPomodoro();
+                        sound.play();
                         stopPomodoro();
                     }
                 } else {
                     loadPomodoro();
                     stopPomodoro();
                 }
-            }, speed);
+            }, globals.speed);
         } else {
             loadPomodoro();
             stopPomodoro();
@@ -146,7 +149,7 @@ function stopPomodoro(){
     if (typeof timer != "undefined") {
         clearInterval(timer);
         timer = undefined;
-    }
+    }     
 }
 
 /********************** pausePomodoro ******************************/
@@ -184,6 +187,7 @@ function changeColor(colorVar) {
 /********************** changeMode ******************************/
 function changeMode(mode) {
     stopPomodoro();
+    stop_sound();
     mode == 0 ? workTime = true : workTime = false;
     mode == 1 ? breakTime = true : breakTime = false;
     mode == 2 ? restTime = true : restTime = false;
@@ -208,7 +212,10 @@ function changeMode(mode) {
     secs.innerText = "00";
 }
 
-
+function stop_sound() {
+    sound.pause();
+    sound.currentTime = 0;
+}
 
 
 
@@ -226,4 +233,4 @@ function pomodoroComplete() {
 
 /**************************** EXPORTS ******************************/
 export {loadPomodoro, startPomodoro, stopPomodoro, pausePomodoro, setProgress};
-export {changeColor, changeMode, loadActualTask};
+export {changeColor, changeMode, loadActualTask, stop_sound};
